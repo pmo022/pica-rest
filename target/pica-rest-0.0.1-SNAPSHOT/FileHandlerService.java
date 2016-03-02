@@ -16,29 +16,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import connectors.IPicaConnector;
-import factories.PicaConnectorFactory;
 
-/**
- * This class restfully exposes files to the web by accessing them through the pica-library.
- * @author patmon
- *
- */
-@Path("/projects/{projectName}/files")
+@Path("/files")
 public class FileHandlerService {
 	
-	/**
-	 * List all available files
-	 * @return an xml representation of available files
-	 */
+	private static String rootFolder = "/home/patmon/Desktop/TestFiles/"; // TODO make relative
+							// perhaps using new File("").getAbsolutePath(); to find root
+	
 	@GET
 	@Produces("application/xml")
-	public String listFiles(@PathParam("projectName") String projectName){
+	public String listFiles(){
+		File folder = new File(rootFolder);
 		StringBuilder result = new StringBuilder().append("<filehandlerservice>");
-		
-		// TODO access pica library to get <file> and <folder>
-		Object files = PicaConnectorFactory.getDefaultConnector().getFiles(projectName);
-		
+		listFilesHelper(result, folder);
 	    result.append("<fileoutput> @Produces(\"application/xml\") Output: \n\nFileHandler found the following files: \n\n </fileoutput></filehandlerservice>");
 		return result.toString();
 	}
@@ -63,52 +53,49 @@ public class FileHandlerService {
 	    }
 	}
  
-	/**
-	 * Gets a file names "filename"
-	 * @param filename the name of the file
-	 * @return the file associated with filename
-	 */
 	@Path("{filename}")
 	@GET
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getFile(@PathParam("projectName") String projectName,
-							@PathParam("filename") String filename) {
+	public Response getFile(@PathParam("filename") String filename) {
+		filename = filename.replace('.', '/');
 		
-		filename = filename.replace('.', '/'); // TODO better solution
+		File file = new File(getAbsoluteFileLocation(filename));
 		
-		// TODO might need updating
-		Object file = PicaConnectorFactory.getDefaultConnector().getFile(projectName, filename);
-		
-		if(file == null) {
+		if(!file.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		
 		return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-	      .header("Content-Disposition", "attachment; filename=\"" + filename + "\"" ) 
+	      .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" )
 	      .build();
 
 	}
 	
-	/**
-	 * Creates or updates a the file associated with filename should one exist
-	 * @param filename the name of the file
-	 * @param fileBytes the bytes of the file
-	 * @return Response detailing how the operation went
-	 */
+
 	@PUT
 	@Path("/{filename}")
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-	public Response uploadFile(@PathParam("projectName") String projectName, 
-			@PathParam("filename") String filename, byte[] fileBytes) {
-		
-		filename = filename.replace('.', '/'); // TODO better solution
-		
-		boolean fileUpdated = PicaConnectorFactory.getDefaultConnector().updateFile(projectName, filename, fileBytes);
-		if(fileUpdated)
+	public Response uploadFile(@PathParam("filename") String filename, byte[] fileBytes) {
+		filename = filename.replace('.', '/');
+		FileOutputStream out;
+		try {
+			out = new FileOutputStream(getAbsoluteFileLocation(filename));
+			out.write(fileBytes);
+			out.close();
 			return Response.ok().build();
-		else {
+
+		} catch (IOException e) {
+			e.printStackTrace();
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+
 		}
 			 
 	}
+	
+	private String getAbsoluteFileLocation(String filename){
+		return rootFolder + filename + ".java";
+	}
+	
+	
+
 }

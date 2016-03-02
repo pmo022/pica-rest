@@ -1,4 +1,4 @@
-package connecters;
+package connectors;
 
 /**
  * Encapsulates access to the Pica library for ease of use in the webapp

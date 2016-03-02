@@ -1,7 +1,7 @@
 package factories;
 
-import connecters.IPicaConnector;
-import connecters.PicaEclipseConnector;
+import connectors.IPicaConnector;
+import connectors.PicaEclipseConnector;
 
 public class PicaConnectorFactory {
 

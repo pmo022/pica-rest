@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import connecters.IPicaConnector;
+import connectors.IPicaConnector;
 import factories.PicaConnectorFactory;
 
 /**
@@ -53,7 +53,7 @@ public class ProjectHandlerService {
 	@Produces(MediaType.APPLICATION_OCTET_STREAM) // TODO make an xml representation of project?
 	public Response getProject(@PathParam("projectName") String projectName) {
 		
-		// TODO do something worthwile with it (perhaps transform to xml?)
+		// TODO do something worthwhile with it (perhaps transform to xml?)
 		Object project = PicaConnectorFactory.getDefaultConnector().getProject(projectName);
 		
 		if(project == null) {
