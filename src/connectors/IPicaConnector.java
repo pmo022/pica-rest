@@ -18,4 +18,6 @@ public interface IPicaConnector {
 	public Object getProject(String projectName);
 
 	public Object getProjects();
+	
+	public Object getWorkspace();
 }
