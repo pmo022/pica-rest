@@ -16,8 +16,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import connectors.IPicaConnector;
-import factories.pica.PicaConnectorFactory;
+import main.connectors.IPicaConnector;
+import main.factories.pica.PicaConnectorFactory;
 
 /**
  * This class restfully exposes files to the web by accessing them through the pica-library.

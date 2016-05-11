@@ -1,0 +1,9 @@
+main/factories/server/TomcatServerFactory.class
+main/server/TomcatServer.class
+main/connectors/IPicaConnector.class
+main/factories/pica/PicaConnectorFactory.class
+main/webapp/LocalFileHandlerService.class
+main/webapp/ProjectHandlerService.class
+main/connectors/PicaConnector.class
+main/factories/pica/PicaConnectorFactory$1.class
+main/webapp/FileHandlerService.class
